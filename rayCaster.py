@@ -51,11 +51,11 @@ for row in range(WIN_SIZE):
         else:
             (obj, t) = hitPoint
             surface = obj.material
-
+            
             normal = obj.normal(ray.pos(t))
             view = -rayDir
-			
-			# Shadow Test
+            		
+            # Shadow Test
             sray = Ray3(ray.pos(t), LIGHT_DIR)
             shadowTest = SCENE.intersect(sray)
             if shadowTest:
@@ -69,4 +69,4 @@ for row in range(WIN_SIZE):
 
         img.putpixel((col, row), colour.intColour())
 
-img.show()  # Display image in default image-viewer application
+img.save("out.png")  # Display image in default image-viewer application

@@ -6,19 +6,14 @@ from sphere import Sphere
 from plane import Plane
 import Image
 from material import Material
-from scene import Scene    
+from scene import Scene
+from light import Light
 
 
 # Define various scene constants
 
 WIN_SIZE = 200                              # Screen window size (square)
 SPACING = 1.0 / WIN_SIZE                    # Pixel spacing on viewplane
-
-LIGHT_DIR = unit(Vector3(2,5,3))            # The direction vector towards the light source
-OFFSET = 0.0000001 * LIGHT_DIR              # Offset to avoid surface cancer
-LIGHT_COLOUR = Colour(0.8, 0.8, 0.8)        # Colour of the single light source
-AMBIENT = Colour(0.1, 0.1, 0.1)             # Ambient light level (assumed white light)
-BACKGROUND = Colour(0.6,0.6,0.6)            # Colour of the background
 
 SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100)
 SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200)
@@ -30,34 +25,28 @@ SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
                Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), MATT_GREEN)])
 
+light = Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8))
+SCENE.background = Colour(0.6, 0.6, 0.6)
+SCENE.ambient = Colour(0.1, 0.1, 0.1) 
+
 class rayCaster(object):
     def __init__(self):
 	return
 
-    def getColour(self, ray):
+    def rayColour(self, ray):
         hitPoint = SCENE.intersect(ray)
 
         if hitPoint is None:
-            return BACKGROUND
+            return SCENE.background
         else:
             (obj, t) = hitPoint
             surface = obj.material
         
             normal = obj.normal(ray.pos(t))
             view = -ray.dir
-                    
-            # Shadow Test
-            sray = Ray3(ray.pos(t), LIGHT_DIR)
-            shadowTest = SCENE.intersect(sray)
-            if shadowTest:
-                (sobj, st) = shadowTest
-                if sobj == obj:
-                    shadowTest = None
-            if shadowTest is None:
-                return surface.litColour(normal, AMBIENT, LIGHT_DIR, LIGHT_COLOUR, view)
-            else:
-                return surface.litColour(normal, AMBIENT, LIGHT_DIR, None, view)
-        
+            
+            return surface.litColour(normal, SCENE.ambient, light.atPoint(ray.pos(t)), view)
+
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         img = Image.new("RGB", (WIN_SIZE, WIN_SIZE))
@@ -73,7 +62,7 @@ class rayCaster(object):
                 # of pixel (col, row)
                 
 
-                img.putpixel((col, row), self.getColour(ray).intColour())
+                img.putpixel((col, row), self.rayColour(ray).intColour())
 
         img.save("out.png")  # Display image in default image-viewer application
 

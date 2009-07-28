@@ -15,16 +15,20 @@ class Material(object):
         self.shininess = shininess
 
 
-    def litColour(self, normal, ambientLight, lightVector,
-                  lightColour, viewVector):
+    def litColour(self, normal, ambientLight, light, viewVector):
         """The RGB colour of this material with the given surface
         normal under the given lighting when viewed from an
         eyepoint in the viewVector direction."""
-        if lightColour is None:
-            return ambientLight * self.diffuseColour
-        if self.shininess:
-            H = unit(lightVector + viewVector)
-            return (self.diffuseColour * ambientLight + (max(0, normal.dot(lightVector)) * self.diffuseColour + normal.dot(H)**self.shininess * self.specularColour) * lightColour)
-        return (self.diffuseColour * ambientLight + max(0, normal.dot(lightVector)) * self.diffuseColour * lightColour)
+
+	colour = ambientLight * self.diffuseColour
+	
+	if light:
+	    if self.shininess:
+		H = unit(light.vector + viewVector)
+		colour += (max(0, normal.dot(light.vector)) * self.diffuseColour + 
+		    normal.dot(H)**self.shininess * self.specularColour) * light.colour
+	    colour += max(0, normal.dot(light.vector)) * self.diffuseColour * light.colour
+
+	return colour
 
         

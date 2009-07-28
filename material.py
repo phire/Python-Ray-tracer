@@ -6,13 +6,15 @@ class Material(object):
     material is the same as its diffuse colour and there is no
     self-emission."""
     
-    def __init__(self, diffuseColour, specularColour = None, shininess = None):
+    def __init__(self, diffuseColour, specularColour = None, shininess = None, 
+		    reflectivity = None):
         """Initialise the diffuse and specular reflectances plus the
         specular highlight exponent.  specularColour and shininess are
         both None for a purely diffuse surface"""
         self.diffuseColour = diffuseColour
         self.specularColour = specularColour
         self.shininess = shininess
+	self.reflectivity = reflectivity
 
 
     def litColour(self, normal, ambientLight, lights, viewVector):

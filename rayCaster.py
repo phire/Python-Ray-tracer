@@ -12,12 +12,12 @@ from light import Light
 
 # Define various scene constants
 
-WIN_SIZE = 200                              # Screen window size (square)
+WIN_SIZE = 600                              # Screen window size (square)
 SPACING = 1.0 / WIN_SIZE                    # Pixel spacing on viewplane
 
-SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100)
-SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200)
-MATT_GREEN = Material(Colour(0.1, 0.7, 0.1), Colour(0.0,0.2,0.0), None)
+SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, 0.2)
+SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, 0.3)
+MATT_GREEN = Material(Colour(0.1, 0.7, 0.1), Colour(0.0,0.0,0.0), None)
 
 EYEPOINT = Point3(0.5, 0.5, 2)
 
@@ -34,9 +34,12 @@ class rayCaster(object):
     def __init__(self):
 	return
 
-    def rayColour(self, ray, depth=100):
+    def rayColour(self, ray, depth=0):
+	if depth > 100:
+	    print "Max Depth reached!"
+	    return Colour(0,0,0)
+	
         hitPoint = SCENE.intersect(ray)
-
         if hitPoint is None:
             return SCENE.background
         else:
@@ -46,7 +49,14 @@ class rayCaster(object):
             normal = obj.normal(ray.pos(t))
             view = -ray.dir
             
-            return surface.litColour(normal, SCENE.ambient, 
+	    colour = Colour(0,0,0)
+
+	    if surface.reflectivity:
+		r = -2 * ray.dir.dot(normal) * normal + ray.dir
+		Rray = Ray3(ray.pos(t) + r * 0.0000001, r)
+		colour += surface.reflectivity * self.rayColour(Rray, depth+1)
+
+            return colour + surface.litColour(normal, SCENE.ambient, 
 	    	map(lambda x: x.atPoint(ray.pos(t)), lights), view)
 
     # Main body. Set up an image then compute colour at each pixel
@@ -57,12 +67,7 @@ class rayCaster(object):
             for col in range(WIN_SIZE):
                 
                 pixelCentre = Point3((col + 0.5) * SPACING, ((WIN_SIZE -row) + 0.5) * SPACING, 1)
-                rayDir = pixelCentre - EYEPOINT
-                ray = Ray3(EYEPOINT, rayDir)
-
-                # Compute the ray from the eye through the centre
-                # of pixel (col, row)
-                
+                ray = Ray3(EYEPOINT, pixelCentre - EYEPOINT)
 
                 img.putpixel((col, row), self.rayColour(ray).intColour())
 

@@ -25,7 +25,8 @@ SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
                Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), MATT_GREEN)])
 
-light = Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8))
+lights = [Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),
+	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.1, 0.5, 0.2))]
 SCENE.background = Colour(0.6, 0.6, 0.6)
 SCENE.ambient = Colour(0.1, 0.1, 0.1) 
 
@@ -33,7 +34,7 @@ class rayCaster(object):
     def __init__(self):
 	return
 
-    def rayColour(self, ray):
+    def rayColour(self, ray, depth=100):
         hitPoint = SCENE.intersect(ray)
 
         if hitPoint is None:
@@ -45,7 +46,8 @@ class rayCaster(object):
             normal = obj.normal(ray.pos(t))
             view = -ray.dir
             
-            return surface.litColour(normal, SCENE.ambient, light.atPoint(ray.pos(t)), view)
+            return surface.litColour(normal, SCENE.ambient, 
+	    	map(lambda x: x.atPoint(ray.pos(t)), lights), view)
 
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):

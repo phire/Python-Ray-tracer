@@ -12,12 +12,12 @@ from light import Light
 
 # Define various scene constants
 
-WIN_SIZE = 600                              # Screen window size (square)
+WIN_SIZE = 1000                              # Screen window size (square)
 SPACING = 1.0 / WIN_SIZE                    # Pixel spacing on viewplane
 
 SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, 0.2)
 SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, 0.3)
-MATT_GREEN = Material(Colour(0.1, 0.7, 0.1), Colour(0.0,0.0,0.0), None)
+MATT_GREEN = Material(Colour(0.1, 0.7, 0.1), Colour(0.0,0.0,0.0), None, None, True)
 
 EYEPOINT = Point3(0.5, 0.5, 2)
 
@@ -26,8 +26,8 @@ SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
                Plane(Point3(0,0,0), Vector3(0,1,0), MATT_GREEN)])
 
 lights = [Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),
-	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.1, 0.5, 0.2))]
-SCENE.background = Colour(0.6, 0.6, 0.6)
+	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.3, 0.3, 0.3))]
+SCENE.background = Colour(0, 0, 0)
 SCENE.ambient = Colour(0.1, 0.1, 0.1) 
 
 class rayCaster(object):
@@ -45,19 +45,24 @@ class rayCaster(object):
         else:
             (obj, t) = hitPoint
             surface = obj.material
-        
-            normal = obj.normal(ray.pos(t))
+	    point = ray.pos(t)
+            normal = obj.normal(point)
             view = -ray.dir
-            
 	    colour = Colour(0,0,0)
-
+	    
+	    # Reflective ray
 	    if surface.reflectivity:
 		r = -2 * ray.dir.dot(normal) * normal + ray.dir
-		Rray = Ray3(ray.pos(t) + r * 0.0000001, r)
+		Rray = Ray3(point + r * 0.0000001, r)
 		colour += surface.reflectivity * self.rayColour(Rray, depth+1)
 
+	    texCords = None
+	    if surface.texture:
+		texCords = obj.texCords(point)
+
+	    # Surface Colour
             return colour + surface.litColour(normal, SCENE.ambient, 
-	    	map(lambda x: x.atPoint(ray.pos(t)), lights), view)
+	    	map(lambda x: x.atPoint(point), lights), view, texCords)
 
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):

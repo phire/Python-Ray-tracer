@@ -34,5 +34,12 @@ class Plane(object):
             return None
         return t
 
+    def texCords(self, point):
+    	vect = point - self.point
+	u = vect.dx
+	v = vect.dz
+	return (u, v)
+    	
+
     
 

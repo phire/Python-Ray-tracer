@@ -20,7 +20,7 @@ LIGHT_COLOUR = Colour(0.8, 0.8, 0.8)        # Colour of the single light source
 AMBIENT = Colour(0.1, 0.1, 0.1)             # Ambient light level (assumed white light)
 BACKGROUND = Colour(0.6,0.6,0.6)            # Colour of the background
 
-SHINY_RED = Material(Colour(0.7, 0.3, 0.2), Colour(0.4,0.4,0.4), 100)
+SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100)
 SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200)
 MATT_GREEN = Material(Colour(0.1, 0.7, 0.1), Colour(0.0,0.2,0.0), None)
 
@@ -38,7 +38,7 @@ class rayCaster(object):
         hitPoint = SCENE.intersect(ray)
 
         if hitPoint is None:
-            colour = BACKGROUND
+            return BACKGROUND
         else:
             (obj, t) = hitPoint
             surface = obj.material
@@ -54,10 +54,9 @@ class rayCaster(object):
                 if sobj == obj:
                     shadowTest = None
             if shadowTest is None:
-                colour = surface.litColour(normal, AMBIENT, LIGHT_DIR, LIGHT_COLOUR, view)
+                return surface.litColour(normal, AMBIENT, LIGHT_DIR, LIGHT_COLOUR, view)
             else:
-                colour = surface.litColour(normal, AMBIENT, LIGHT_DIR, None, view)
-	return colour
+                return surface.litColour(normal, AMBIENT, LIGHT_DIR, None, view)
         
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):

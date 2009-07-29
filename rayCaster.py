@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import cProfile
 from geom3 import Point3, Vector3, Ray3, cross, dot, unit, length
 from math import sqrt, tan
@@ -68,15 +69,24 @@ class rayCaster(object):
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         img = Image.new("RGB", (WIN_SIZE, WIN_SIZE))
-
+	
+	print "Tracing Rays:"
+	count = 0
+	max = float(WIN_SIZE**2)
+	lastPercentage = 0
         for row in range(WIN_SIZE):
             for col in range(WIN_SIZE):
-                
+                count += 1
+
                 pixelCentre = Point3((col + 0.5) * SPACING, ((WIN_SIZE -row) + 0.5) * SPACING, 1)
                 ray = Ray3(EYEPOINT, pixelCentre - EYEPOINT)
 
                 img.putpixel((col, row), self.rayColour(ray).intColour())
-
+	    percentage = (count / max * 100)
+	    if percentage - lastPercentage > 9.9:
+	        print "\t\t%2.0f%%" % percentage
+		lastPercentage = percentage
+	print "Done"
         img.save("out.png")  # Display image in default image-viewer application
 
 caster = rayCaster()

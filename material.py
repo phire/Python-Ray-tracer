@@ -26,7 +26,7 @@ class Material(object):
 	
 	diffcol = self.diffuseColour
 	if self.texture:
-	    diffcol = check(texCords)
+	    diffcol = self.texture.colour(texCords)
 	
 	colour = ambientLight * diffcol
 	
@@ -38,11 +38,3 @@ class Material(object):
 	    colour += max(0, normal.dot(light.vector)) * diffcol * light.colour
 
 	return colour
-
-def check(cords):
-    (u, v) = cords
-    u = u * 10
-    v = v * 10
-    if(int(u) % 2 != int(v) % 2):
-	return Colour(0,0,0)
-    return Colour(0.5,0.5,0.5)

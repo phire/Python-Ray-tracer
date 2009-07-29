@@ -21,7 +21,7 @@ SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, 0.2)
 SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, 0.3)
 MATT_GREEN = Material(None, None, None, 0.3, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
 
-EYEPOINT = Point3(0.5, 0.5, 2)
+EYEPOINT = Point3(0.5, 0.3, 2.5)
 
 SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
                Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
@@ -84,9 +84,9 @@ class rayCaster(object):
                 img.putpixel((col, row), self.rayColour(ray).intColour())
 	    percentage = (count / max * 100)
 	    if percentage - lastPercentage > 9.9:
-	        print "\t\t%2.0f%%" % percentage
+	        print "%11.0f%%" % percentage
 		lastPercentage = percentage
-	print "Done"
+	print "\tDone"
         img.save("out.png")  # Display image in default image-viewer application
 
 caster = rayCaster()

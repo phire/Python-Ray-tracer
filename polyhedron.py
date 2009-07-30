@@ -13,19 +13,12 @@ class Halfspace(object):
 	return (t, angle)
 
 class Polyhedron(object):
-    def __init__(self, mat):
+    def __init__(self, halfspaces, mat):
 	self.material = mat
-	self.halfspaces = [
-			   Halfspace(Point3(0.2,0.0,0.5), Vector3(0,-1,0)),
-			   Halfspace(Point3(0.2,0.175,0.5), Vector3(0, 1,0)),
-			   Halfspace(Point3(0.1,0.1,0.5), Vector3(-1,0,0)),
-			   Halfspace(Point3(0.4,0.1,0.5), Vector3( 1,0,0)),
-			   Halfspace(Point3(0.5,0.1,0.8), Vector3(0,0, 1)),
-			   Halfspace(Point3(0.5,0.1,0.5), Vector3(0,0,-1))
-			  ]
+	self.halfspaces = halfspaces
 
     def normal(self, point):
-	return self.Hacknormal
+	return self.Hacknormal # TODO: Do this without a hack, or make intersect return normals too
 	
 
     def intersect(self, ray):

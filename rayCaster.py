@@ -10,6 +10,7 @@ from material import Material
 from scene import Scene
 from light import Light
 from texture import *
+from polyhedron import Polyhedron
 
 
 # Define various scene constants
@@ -17,15 +18,17 @@ from texture import *
 WIN_SIZE = 400                              # Screen window size (square)
 SPACING = 1.0 / WIN_SIZE                    # Pixel spacing on viewplane
 
-SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, 0.2)
-SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, 0.3)
-MATT_GREEN = Material(None, None, None, 0.3, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
+SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, .2)
+SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, .3)
+MATT_GREEN = Material(Colour(0.1,0.85, 0.1))
+CHECK_FLOOR = Material(None, None, None, 0.3, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
 
-EYEPOINT = Point3(0.5, 0.3, 2.5)
+EYEPOINT = Point3(0.5, 0.6, 2.5)
 
 SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
                Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
-               Plane(Point3(0,0,0), Vector3(0,1,0), MATT_GREEN)])
+	       Polyhedron(MATT_GREEN),
+               Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR)])
 
 lights = [Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),
 	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.3, 0.3, 0.3))]

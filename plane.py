@@ -29,7 +29,7 @@ class Plane(object):
     def intersect(self, ray):
         """The ray t value of the first intersection point of the
         ray with self, or None if no intersection occurs"""
-        t = dot((self.point - ray.start), self.Pnormal/(dot(ray.dir, self.Pnormal)))
+        t = (self.point - ray.start).dot(self.Pnormal)/ray.dir.dot(self.Pnormal)
         if t < 0:
             return None
         return t

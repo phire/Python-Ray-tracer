@@ -24,12 +24,11 @@ class Scene(object):
         for o in self.objs:
 	    t = o.intersect(ray)
 	    if t:
-		return (o, t)
-            #if mino == None or (t != None and t < mint):
-                #mint = t
-		#mino = o
-	#if mint is not None:
-	    #return mino, mint
+		if mino == None or  t < mint:
+                    mint = t
+		    mino = o
+	if mint is not None:
+	    return mino, mint
         return None
 
                 

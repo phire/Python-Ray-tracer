@@ -26,7 +26,6 @@ CHECK_FLOOR = Material(None, None, None, 0.3, Texture_Check(6, Colour(0,0,0), Co
 EYEPOINT = Point3(0.5, 0.6, 2.5)
 
 SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
-               Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
 	       Polyhedron([ # Cube
 		  Halfspace(Point3(0.2,0.0,0.5), Vector3(0,-1,0)),
 		  Halfspace(Point3(0.2,0.175,0.5), Vector3(0, 1,0)),
@@ -35,6 +34,7 @@ SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
 		  Halfspace(Point3(0.5,0.1,0.8), Vector3(0,0, 1)),
 		  Halfspace(Point3(0.5,0.1,0.5), Vector3(0,0,-1))
 			  ], MATT_GREEN),
+	       Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR)])
 
 lights = [Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),

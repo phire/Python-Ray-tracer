@@ -10,7 +10,7 @@ from material import Material
 from scene import Scene
 from light import Light
 from texture import *
-from polyhedron import Polyhedron
+from polyhedron import *
 
 
 # Define various scene constants

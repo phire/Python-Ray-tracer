@@ -80,8 +80,7 @@ class rayCaster(object):
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         img = Image.new("RGB", (WIN_SIZE, WIN_SIZE))
-	aa = NoAA(EYEPOINT, self.rayColour)
-	
+	aa = SuperSampling(EYEPOINT, self.rayColour, 16)
 	print "Tracing Rays:"
 	count = 0
 	max = float(WIN_SIZE**2)

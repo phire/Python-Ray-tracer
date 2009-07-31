@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import cProfile
+from antiAlaising import *
 from geom3 import Point3, Vector3, Ray3, cross, dot, unit, length
 from math import sqrt, tan
 from colour import Colour
@@ -23,7 +24,7 @@ SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, .3)
 MATT_GREEN = Material(Colour(0.1,0.85, 0.1))
 CHECK_FLOOR = Material(None, None, None, 0.3, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
 
-EYEPOINT = Point3(0.5, 0.6, 2.5)
+EYEPOINT = Point3(0.5, 0.4, 2.5)
 
 SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
 	       Polyhedron([ # Cube
@@ -79,6 +80,7 @@ class rayCaster(object):
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         img = Image.new("RGB", (WIN_SIZE, WIN_SIZE))
+	aa = NoAA(EYEPOINT, self.rayColour)
 	
 	print "Tracing Rays:"
 	count = 0
@@ -88,10 +90,11 @@ class rayCaster(object):
             for col in range(WIN_SIZE):
                 count += 1
 
-                pixelCentre = Point3((col + 0.5) * SPACING, ((WIN_SIZE -row) + 0.5) * SPACING, 1)
-                ray = Ray3(EYEPOINT, pixelCentre - EYEPOINT)
+                #pixelCentre = Point3((col + 0.5) * SPACING, ((WIN_SIZE -row) + 0.5) * SPACING, 1)
+		pixelBox = (col * SPACING, (WIN_SIZE - row) * SPACING, (col+1) * SPACING, (WIN_SIZE - row+1) * SPACING)
+                #ray = Ray3(EYEPOINT, pixelCentre - EYEPOINT)
 
-                img.putpixel((col, row), self.rayColour(ray).intColour())
+                img.putpixel((col, row), aa.getPixel(pixelBox).intColour())
 	    percentage = (count / max * 100)
 	    if percentage - lastPercentage > 9.9:
 	        print "%11.0f%%" % percentage

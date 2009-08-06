@@ -17,7 +17,7 @@ class Plane(object):
         """Create a plane through a given point with given normal
         and surface material"""
         self.point = point
-        self.norm = normal
+        self.norm = unit(normal)
         self.mat = material
 
     def intersect(self, ray):

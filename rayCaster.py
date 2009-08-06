@@ -28,13 +28,14 @@ CHECK_FLOOR = Material(None, None, None, 0.3, Texture_Check(6, Colour(0,0,0), Co
 EYEPOINT = Point3(0.5, 0.4, 2.5)
 
 SCENE = Scene([Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
-	       Polyhedron([ # Cube
-		  Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), MATT_GREEN),
-		  Plane(Point3(0.2,0.175,0.5), Vector3(0, 1,0), MATT_GREEN),
-		  Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), MATT_GREEN),
-		  Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), MATT_GREEN),
-		  Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), MATT_GREEN),
-		  Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), MATT_GREEN),
+	       Intersection([ # Cube
+		  #Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), MATT_GREEN),
+		  Plane(Point3(0.2,0.175,0.5), Vector3(0, 1,0), SHINY_BLUE),
+		  #Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), MATT_GREEN),
+		  #Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), MATT_GREEN),
+		  #Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), MATT_GREEN),
+		  #Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), MATT_GREEN),
+		  Sphere(Point3(0.1,0.175,0.1), 0.175, SHINY_BLUE),
 			  ]),
 	       Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR)

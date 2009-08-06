@@ -11,7 +11,7 @@ from material import Material
 from scene import Scene
 from light import Light
 from texture import *
-from polyhedron import *
+from CSG import *
 import sys
 
 

@@ -19,7 +19,7 @@ class Material(object):
 	self.texture = texture
 
 
-    def litColour(self, normal, ambientLight, lights, viewVector, texCords):
+    def litColour(self, normal, ambientLight, lights, viewVector, texCords=None):
         """The RGB colour of this material with the given surface
         normal under the given lighting when viewed from an
         eyepoint in the viewVector direction."""

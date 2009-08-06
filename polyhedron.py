@@ -1,4 +1,5 @@
 from geom3 import Vector3, Point3, Ray3, dot, unit
+from hit import Hit
 
 class Halfspace(object):
     def __init__(self, point, normal):
@@ -13,39 +14,19 @@ class Halfspace(object):
 	return (t, angle)
 
 class Polyhedron(object):
-    def __init__(self, halfspaces, mat):
-	self.material = mat
+    def __init__(self, halfspaces):
 	self.halfspaces = halfspaces
 
-    def normal(self, point):
-	return self.Hacknormal # TODO: Do this without a hack, or make intersect return normals too
-	
-
     def intersect(self, ray):
-	entry = None
-	exit = None
+	hit = Hit(self, None, None)
 	for h in self.halfspaces:
-	    (t, e) =  h.intersect(ray)
-	    if e < 0:
-		if t > entry:
-		    entry = t
-		    self.Hacknormal = h.normal
-	    else:
-	    	if t < 0:
-		    if self.halfspaces.index(h) != 0:
-		   	self.halfspaces.remove(h)
-		   	self.halfspaces = [h] + self.halfspaces
-		    return None
-		if exit:
-		    exit = min(t, exit)
-		else: exit = t
-	    if exit != None and entry != None and (entry - exit) > 0.0000000001:
+	    hit = hit.intersection(h.intersect(ray))
+	    if hit.miss(): 
 	        if self.halfspaces.index(h) != 0:
 	            self.halfspaces.remove(h)
 		    self.halfspaces = [h] + self.halfspaces
 		return None
-	#print "[", entry,",", exit, "]"
-	if entry > 0:
-	    return entry
+	if hit.entry < hit.exit and hit.entry > 0:
+	    return hit
 	return None
 

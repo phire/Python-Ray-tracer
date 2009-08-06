@@ -8,6 +8,7 @@
 
 from geom3 import Vector3, Point3, Ray3, dot, unit
 from math import sqrt
+from hit import Hit
 
 class Plane(object):
     """A ray-traceable plane"""
@@ -16,27 +17,26 @@ class Plane(object):
         """Create a plane through a given point with given normal
         and surface material"""
         self.point = point
-        self.Pnormal = normal
-        self.material = material
-
-
-    def normal(self, p):
-        """The surface normal at the given point"""
-        # Normal is always the same for a plane
-        return self.Pnormal
-
+        self.norm = normal
+        self.mat = material
 
     def intersect(self, ray):
-        """The ray t value of the first intersection point of the
-        ray with self, or None if no intersection occurs"""
+        """Returns a hit, or None if the ray is parallel to the plane"""
 
-	angle = ray.dir.dot(self.Pnormal)
-	if angle == 0:
-	    return None
-	t = (self.point - ray.start).dot(self.Pnormal)/angle
-        if t < 0:
-            return None
-        return t
+	t = None
+	angle = ray.dir.dot(self.norm)
+	if angle != 0:
+	    t = (self.point - ray.start).dot(self.norm)/angle
+
+	hit = None
+	if angle < 0:
+	    hit = Hit(self, t, None, self.norm, self.mat)
+	else :
+	    hit = Hit(self, None, t, self.norm, self.mat)
+	if self.mat.texture and hit.entry > 0:
+	    hit.texCords = self.texCords(ray.pos(t))
+	return hit
+
 
     def texCords(self, point):
     	vect = point - self.point

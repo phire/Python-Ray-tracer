@@ -19,16 +19,11 @@ class Scene(object):
         returning the pair (obj, t) of the first hit or None if
         there are no hits"""
 
-	mint = None
-	mino = None
-        for o in self.objs:
-	    t = o.intersect(ray)
-	    if t:
-		if mino == None or  t < mint:
-                    mint = t
-		    mino = o
-	if mint is not None:
-	    return mino, mint
-        return None
+        minHit = None
+	for o in self.objs:
+	    hit = o.intersect(ray)
+	    if hit and hit.entry > 0:
+		if minHit == None or  hit < minHit:
+                    minHit = hit
+	return minHit
 
-                

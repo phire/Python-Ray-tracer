@@ -7,6 +7,7 @@
 
 from geom3 import Vector3, Point3, Ray3, dot, unit
 from math import sqrt
+from hit import Hit
 
 class Sphere(object):
     """A ray-traceable sphere"""
@@ -27,7 +28,7 @@ class Sphere(object):
     def intersect(self, ray):
         """The ray t value of the first intersection point of the
         ray with self, or None if no intersection occurs"""
-        t = None
+        hit = None
         q = self.centre - ray.start
         vDotQ = dot(ray.dir, q)
         squareDiffs = dot(q, q) - self.radius*self.radius
@@ -36,11 +37,13 @@ class Sphere(object):
             root = sqrt(discrim)
             t0 = (vDotQ - root)
             t1 = (vDotQ + root)
-            if t0 > 0:
-                t = t0
-            elif t1 > 0:
-                t = t1
-        return t
+            if t0 < t1:
+	    	hit = Hit(self, t0, t1, None, self.material)
+	    else:
+		hit = Hit(self, t1, t0, None, self.material)
+	    if hit.entry > 0:
+		hit.normal = self.normal(ray.pos(hit.entry))
+        return hit
     
 
     def __repr__(self):

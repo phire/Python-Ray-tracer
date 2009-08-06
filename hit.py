@@ -16,18 +16,20 @@ class Hit(object):
     def intersection(self, other):
 	"""Returns the intersection of 2 hits"""
 	ret = self
+	if other is None:
+	    return ret
 	if other.entry:
 	    if other.entry > self.entry:
-		self.entry = other.entry
-		self.mat = other.mat
-		self.normal = other.normal
-		self.texCords = other.texCords
+		ret.entry = other.entry
+		ret.mat = other.mat
+		ret.normal = other.normal
+		ret.texCords = other.texCords
 	if other.exit:
 	    if self.exit:
-		self.exit = min(self.exit, other.exit)
+		ret.exit = min(self.exit, other.exit)
 	    else:
-		self.exit = other.exit
-	return self
+		ret.exit = other.exit
+	return ret
     
     def miss(self):
 	return (self.exit < 0 and self.exit != None) or (self.exit != None and self.entry != None and (self.entry - self.exit) > 0.00000001)

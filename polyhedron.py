@@ -31,11 +31,15 @@ class Polyhedron(object):
 		    entry = t
 		    self.Hacknormal = h.normal
 	    else:
+	    	if t < 0:
+		   return None
 		if exit:
 		    exit = min(t, exit)
 		else: exit = t
+	    if entry > exit:
+		return None
 	#print "[", entry,",", exit, "]"
-	if entry < exit and entry > 0:
+	if entry > 0:
 	    return entry
 	return None
 

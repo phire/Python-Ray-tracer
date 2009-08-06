@@ -7,7 +7,7 @@ class Halfspace(object):
     
     def intersect(self, ray):
 	t = None
-	angle = unit(ray.dir).dot(self.normal)
+	angle = ray.dir.dot(self.normal)
 	if angle != 0:
 	    t = (self.point - ray.start).dot(self.normal)/angle
 	return (t, angle)
@@ -32,11 +32,17 @@ class Polyhedron(object):
 		    self.Hacknormal = h.normal
 	    else:
 	    	if t < 0:
-		   return None
+		    if self.halfspaces.index(h) != 0:
+		   	self.halfspaces.remove(h)
+		   	self.halfspaces = [h] + self.halfspaces
+		    return None
 		if exit:
 		    exit = min(t, exit)
 		else: exit = t
-	    if entry > exit:
+	    if exit != None and entry != None and (entry - exit) > 0.0000000001:
+	        if self.halfspaces.index(h) != 0:
+	            self.halfspaces.remove(h)
+		    self.halfspaces = [h] + self.halfspaces
 		return None
 	#print "[", entry,",", exit, "]"
 	if entry > 0:

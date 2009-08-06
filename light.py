@@ -1,5 +1,5 @@
 #from colour import Colour
-from geom3 import Ray3, Vector3, Point3
+from geom3 import *
 
 class Light(object):
     """A Basic light at inifinite distance"""
@@ -22,3 +22,18 @@ class LightHit(object):
 	self.colour = colour
 	self.vector = vector
 
+class PointLight(object):
+    def __init__(self, scene, point, colour):
+	self.colour = colour
+	self.point = point
+	self.scene = scene
+	self.offset = 0.0000001
+
+    def atPoint(self, point):
+	dir = unit(self.point - point)
+	shadowRay = Ray3(point + self.offset * dir, dir)
+	shadowTest = self.scene.intersect(shadowRay)
+	if shadowTest is None or shadowTest.entry > length(self.point - point):
+	    return LightHit(self.colour, dir)
+	#print shadowTest.entry
+	return None

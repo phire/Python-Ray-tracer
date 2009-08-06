@@ -9,7 +9,7 @@ from plane import Plane
 import Image
 from material import Material
 from scene import Scene
-from light import Light
+from light import *
 from texture import *
 from CSG import *
 import sys
@@ -28,24 +28,27 @@ CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(0,0,0), C
 EYEPOINT = Point3(0.5, 0.4, 2.5)
 
 SCENE = Scene([
-	       #Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
+	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
 	       Difference([
 	       Intersection([ # Cube
 		  #Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), MATT_GREEN),
-		  Plane(Point3(0.1,0.175,0.1), Vector3(.1, 1,.3), SHINY_BLUE),
+		  Plane(Point3(0.1,0.175,0.8), Vector3(.1, 1,.3), SHINY_BLUE),
 		  #Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), MATT_GREEN),
 		  #Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), MATT_GREEN),
 		  #Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), MATT_GREEN),
 		  #Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), MATT_GREEN),
-		  Sphere(Point3(0.1,0.175,0.1), 0.175, SHINY_BLUE),
+		  Sphere(Point3(0.1,0.175,0.8), 0.175, SHINY_BLUE),
 			  ]),
-		  Sphere(Point3(0.1,0.175,0.1), 0.125, SHINY_RED)]),
+		  Sphere(Point3(0.1,0.175,0.8), 0.125, SHINY_RED)]),
 	       Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR)
 	       ])
 
-lights = [Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),
-	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.3, 0.3, 0.3))]
+lights = [
+	  #Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),
+	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.3, 0.3, 0.3)),
+	  PointLight(SCENE, Point3(.5, .5, 1), Colour(0.8, 0.8, 0.8)),
+	  ]
 SCENE.background = Colour(0, 0, 0)
 SCENE.ambient = Colour(0.1, 0.1, 0.1) 
 

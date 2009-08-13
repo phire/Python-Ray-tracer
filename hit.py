@@ -23,13 +23,12 @@ class Hit(object):
 	"""Returns the intersection of 2 hits"""
 	ret = self
 	if other is None :
-	    return ret	    #fixme: Is this the best option?
-	if other.entry:
-	    if other.entry > self.entry:
-		ret.entry = other.entry
-		ret.mat = other.mat
-		ret.normal = other.normal
-		ret.texCords = other.texCords
+	    return None	    #fixme: Is this the best option?
+	if other.entry > self.entry:
+	    ret.entry = other.entry
+	    ret.mat = other.mat
+	    ret.normal = other.normal
+	    ret.texCords = other.texCords
 	if other.exit:
 	    if self.exit:
 		ret.exit = min(self.exit, other.exit)

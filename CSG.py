@@ -9,10 +9,10 @@ class Intersection(object):
 	hit = Hit(self, ray, None, None)
 	for o in self.objs:
 	    hit = hit.intersection(o.intersect(ray))
-	    if hit.miss(): 
-	        #if self.objs.index(o) != 0:
-	            #self.objs.remove(o)
-		    #self.objs = [o] + self.objs
+	    if hit == None or hit.miss(): 
+	        if self.objs.index(o) != 0:
+	            self.objs.remove(o)
+		    self.objs = [o] + self.objs
 		return None
 	return hit
 

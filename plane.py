@@ -24,15 +24,20 @@ class Plane(object):
         """Returns a hit, or None if the ray is parallel to the plane"""
 
 	t = None
+	hit = None
 	angle = ray.dir.dot(self.norm)
 	if angle != 0:
 	    t = (self.point - ray.start).dot(self.norm)/angle
-
-	hit = None
-	if angle < 0:
-	    hit = Hit(self, ray, t, None, self.norm, self.mat)
-	else :
-	    hit = Hit(self, ray, None, t, self.norm, self.mat)
+	    if angle < 0:
+	        hit = Hit(self, ray, t, (), self.norm, self.mat)
+	    else :
+	        hit = Hit(self, ray, None, t, self.norm, self.mat)
+	else:
+	    vector = unit(ray.start - self.point)
+	    if vector.dot(self.norm) < 0:
+	    	hit = Hit(self, ray, None, (), self.norm, self.mat)
+	    else:
+	    	return None
 	if self.mat.texture and hit.entry > 0:
 	    hit.texCords = self.texCords(ray.pos(t))
 	return hit

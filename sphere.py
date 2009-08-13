@@ -38,9 +38,9 @@ class Sphere(object):
             t0 = (vDotQ - root)
             t1 = (vDotQ + root)
             if t0 < t1:
-	    	hit = Hit(self, t0, t1, None, self.material)
+	    	hit = Hit(self, ray, t0, t1, None, self.material)
 	    else:
-		hit = Hit(self, t1, t0, None, self.material)
+		hit = Hit(self, ray, t1, t0, None, self.material)
 	    if hit.entry > 0:
 		hit.normal = self.normal(ray.pos(hit.entry))
         return hit

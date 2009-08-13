@@ -6,13 +6,13 @@ class Intersection(object):
 	self.objs = objects
 
     def intersect(self, ray):
-	hit = Hit(self, None, None)
+	hit = Hit(self, ray, None, None)
 	for o in self.objs:
 	    hit = hit.intersection(o.intersect(ray))
 	    if hit.miss(): 
-	        if self.objs.index(o) != 0:
-	            self.objs.remove(o)
-		    self.objs = [o] + self.objs
+	        #if self.objs.index(o) != 0:
+	            #self.objs.remove(o)
+		    #self.objs = [o] + self.objs
 		return None
 	return hit
 
@@ -21,7 +21,7 @@ class Union(object):
 	self.objs = objects
 
     def intersect(self, ray):
-	hit = Hit(self, None, None)
+	hit = Hit(self, ray, None, None)
 	for o in self.objs:
 	    hit = hit.union(o.intersect(ray))
 	if hit.entry < hit.exit:

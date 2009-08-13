@@ -35,5 +35,6 @@ class PointLight(object):
 	shadowTest = self.scene.intersect(shadowRay)
 	if shadowTest is None or shadowTest.entry > length(self.point - point):
 	    return LightHit(self.colour, dir)
-	#print shadowTest.entry
 	return None
+
+#class SpotLight(object)

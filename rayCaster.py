@@ -29,25 +29,25 @@ EYEPOINT = Point3(0.5, 0.4, 2.5)
 
 SCENE = Scene([
 	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
-	       Difference([
+	       #Difference([
 	       Intersection([ # Cube
-		  #Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), MATT_GREEN),
-		  Plane(Point3(0.1,0.175,0.8), Vector3(.1, 1,.3), SHINY_BLUE),
-		  #Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), MATT_GREEN),
-		  #Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), MATT_GREEN),
-		  #Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), MATT_GREEN),
-		  #Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), MATT_GREEN),
-		  Sphere(Point3(0.1,0.175,0.8), 0.175, SHINY_BLUE),
+		  Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), CHECK_FLOOR),
+		  Plane(Point3(0.1,0.175,0.8), Vector3(0, 1,0), CHECK_FLOOR),
+		  Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), CHECK_FLOOR),
+		  Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), CHECK_FLOOR),
+		  Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), CHECK_FLOOR),
+		  Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), CHECK_FLOOR),
+		  #Sphere(Point3(0.1,0.175,0.8), 0.175, SHINY_BLUE),
 			  ]),
-		  Sphere(Point3(0.1,0.175,0.8), 0.125, SHINY_RED)]),
+		 # Sphere(Point3(0.1,0.175,0.8), 0.125, SHINY_RED)]),
 	       Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR)
 	       ])
 
-lights = [
+SCENE.lights = [
 	  #Light(SCENE, unit(Vector3(2,5,3)), Colour(0.8, 0.8, 0.8)),
 	  Light(SCENE, unit(Vector3(-4,5,0)), Colour(0.3, 0.3, 0.3)),
-	  PointLight(SCENE, Point3(.5, .5, 1), Colour(0.8, 0.8, 0.8)),
+	  #PointLight(SCENE, Point3(.7, .5, .8), Colour(0.8, 0.8, 0.8)),
 	  ]
 SCENE.background = Colour(0, 0, 0)
 SCENE.ambient = Colour(0.1, 0.1, 0.1) 
@@ -65,21 +65,10 @@ class rayCaster(object):
         if hit is None:
             return SCENE.background
         else:
-	    point = ray.pos(hit.entry)
-            normal = hit.normal
-            view = -ray.dir
-	    colour = Colour(0,0,0)
+	    hit.calcReflections(SCENE)
+	    hit.calcLights(SCENE)
+	    return hit.colour()
 	    
-	    # Reflective ray
-	    if hit.mat.reflectivity:
-		r = -2 * ray.dir.dot(normal) * normal + ray.dir
-		Rray = Ray3(point + r * 0.0000001, r)
-		colour += hit.mat.reflectivity * self.rayColour(Rray, depth+1)
-
-	    # Surface Colour
-            return colour + hit.mat.litColour(normal, SCENE.ambient, 
-	    	map(lambda x: x.atPoint(point), lights), view, hit.texCords)
-
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         img = Image.new("RGB", (WIN_SIZE, WIN_SIZE))
@@ -93,9 +82,7 @@ class rayCaster(object):
             for col in range(WIN_SIZE):
                 count += 1
 
-                #pixelCentre = Point3((col + 0.5) * SPACING, ((WIN_SIZE -row) + 0.5) * SPACING, 1)
 		pixelBox = (col * SPACING, (WIN_SIZE - row) * SPACING, (col+1) * SPACING, (WIN_SIZE - row+1) * SPACING)
-                #ray = Ray3(EYEPOINT, pixelCentre - EYEPOINT)
 
                 img.putpixel((col, row), aa.getPixel(pixelBox).intColour())
 	    percentage = (count / max * 100)

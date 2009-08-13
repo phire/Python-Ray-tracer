@@ -30,9 +30,9 @@ class Plane(object):
 
 	hit = None
 	if angle < 0:
-	    hit = Hit(self, t, None, self.norm, self.mat)
+	    hit = Hit(self, ray, t, None, self.norm, self.mat)
 	else :
-	    hit = Hit(self, None, t, self.norm, self.mat)
+	    hit = Hit(self, ray, None, t, self.norm, self.mat)
 	if self.mat.texture and hit.entry > 0:
 	    hit.texCords = self.texCords(ray.pos(t))
 	return hit

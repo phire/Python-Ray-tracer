@@ -28,29 +28,29 @@ CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(0,0,0), C
 EYEPOINT = Point3(0.5, 0.4, 2.5)
 
 SCENE = Scene([
-	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
-	       #Difference([
+	       #Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
+	       Difference([
 	       Intersection([ # Cube
-		  Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), CHECK_FLOOR),
-		  Plane(Point3(0.1,0.175,0.8), Vector3(0, 1,0), CHECK_FLOOR),
-		  Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), CHECK_FLOOR),
-		  Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), CHECK_FLOOR),
-		  Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), CHECK_FLOOR),
-		  Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), CHECK_FLOOR),
-		  #Sphere(Point3(0.1,0.175,0.8), 0.175, SHINY_BLUE),
+		  #Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), CHECK_FLOOR),
+		  Plane(Point3(0.1,0.175,0.8), Vector3(0, 1,.25), SHINY_BLUE),
+		  #Plane(Point3(0.1,0.1,0.5), Vector3(-1,0,0), CHECK_FLOOR),
+		  #Plane(Point3(0.4,0.1,0.5), Vector3( 1,0,0), CHECK_FLOOR),
+		  #Plane(Point3(0.5,0.1,0.8), Vector3(0,0, 1), CHECK_FLOOR),
+		  #Plane(Point3(0.5,0.1,0.5), Vector3(0,0,-1), CHECK_FLOOR),
+		  Sphere(Point3(0.1,0.175,0.8), 0.175, SHINY_BLUE),
 			  ]),
-		 # Sphere(Point3(0.1,0.175,0.8), 0.125, SHINY_RED)]),
-	       Sphere(Point3(0.75,0.2,0.6), 0.15, SHINY_RED),
+		 Sphere(Point3(0.1,0.175,0.8), 0.125, SHINY_BLUE)]),
+	       Sphere(Point3(0.75,0.15,.2), 0.15, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR)
 	       ])
 
 SCENE.lights = [
-	  Light(SCENE, unit(Vector3(2,5,3)), Colour(0.4, 0.4, 0.0)),
-	  Light(SCENE, unit(Vector3(-4,3,0)), Colour(0.3, 0.0, 0.0)),
-	  PointLight(SCENE, Point3(.7, .5, .8), Colour(0.8, 0.8, 0.8)),
+	  #Light(SCENE, unit(Vector3(2,5,3)), Colour(0.6, 0.6, 0.6)),
+	  #Light(SCENE, unit(Vector3(-4,3,0)), Colour(0.7, 0.7, 0.7)),
+	  PointLight(SCENE, Point3(.5, 1.1, 1.2), Colour(0.9, 0.9, 0.9)),
 	  ]
 SCENE.background = Colour(0, 0, 0)
-SCENE.ambient = Colour(0.1, 0.1, 0.1) 
+SCENE.ambient = Colour(0.0, 0.0, 0.0) 
 
 class rayCaster(object):
     def __init__(self):
@@ -135,5 +135,5 @@ class rayCaster(object):
         img.save("out.png")  # Display image in default image-viewer application
 
 caster = rayCaster()
-cProfile.run("caster.trace()")
-#caster.trace()
+#cProfile.run("caster.trace()")
+caster.trace()

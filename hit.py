@@ -1,4 +1,5 @@
 from geom3 import Ray3, dot, unit 
+from colour import Colour
 
 
 class Hit(object):
@@ -61,7 +62,7 @@ class Hit(object):
 	    if other.exit > self.entry and other.entry < self.entry:
 		ret.entry = other.exit
 		ret.mat = other.mat
-		ret.normal = other.normal
+		ret.normal = -other.normal2
 		ret.texCords = other.texCords
 	return ret
     
@@ -71,15 +72,19 @@ class Hit(object):
     def calcLights(self, scene):
 	"""Calculate lights for the hit.
 	Note: Call this after calcReflections so reflections get lights too"""
+	if self.entry < 0:
+	    return
 	self.lights = [l.atPoint(self.ray.pos(self.entry)) for l in scene.lights]
 	self.ambient = scene.ambient
 	if self.reflection:
 	    self.reflection.calcLights(scene) # recurse to reflections
     
     def calcReflections(self, scene, depth=0):
-	if self.mat.reflectivity and depth < 100:
+	if self.mat.reflectivity and depth < 100 and self.entry > 0:
 	    dir = self.ray.dir
 	    norm = self.normal
+	    if norm is None:
+		print self.obj, self.entry, self.exit
 	    Rdir = -2 * dir.dot(norm) * norm + dir
 	    ray = Ray3(self.ray.pos(self.entry) + Rdir * 0.0000001, Rdir)
 	    self.reflection = scene.intersect(ray)
@@ -89,6 +94,8 @@ class Hit(object):
 		self.bgcolour = scene.background
 
     def colour(self):
+	if self.entry < 0:
+	    return Colour(0,0,0)
 	colour = self.mat.litColour(self.normal, self.ambient, self.lights,
 		    -self.ray.dir, self.texCords)
 	if self.reflection:

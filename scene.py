@@ -22,7 +22,7 @@ class Scene(object):
         minHit = None
 	for o in self.objs:
 	    hit = o.intersect(ray)
-	    if hit and hit.entry > 0:
+	    if hit and (hit.entry > 0):
 		if minHit == None or  hit < minHit:
                     minHit = hit
 	return minHit

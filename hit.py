@@ -1,6 +1,20 @@
 from geom3 import Ray3, dot, unit 
 from colour import Colour
 
+class BlankHit(object):
+    def __init__(self, colour):
+	self.mycolour = colour
+	self.entry = ()
+	self.exit = ()
+
+    def colour(self):
+	return self.mycolour
+
+    def calcLights(self, scene):
+	return
+
+    def calcReflections(self, scene, depth=0):
+	return
 
 class Hit(object):
     def __init__(self, obj, ray, entry, exit, normal=None, material=None, TexCords=None):
@@ -13,6 +27,9 @@ class Hit(object):
 	self.ray = ray
 	self.reflection = None
 	self.bgcolour = None
+	self.lights = [None]
+	self.ambient = Colour(0.8, 0.8, 0.8)
+
 
     def __lt__(self, other):
     	return self.entry < other.entry

@@ -13,6 +13,7 @@ from light import *
 from texture import *
 from CSG import *
 import sys
+from Tkinter import Tk, Canvas, PhotoImage
 
 
 # Define various scene constants
@@ -28,7 +29,7 @@ CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(0,0,0), C
 EYEPOINT = Point3(0.5, 0.4, 2.5)
 
 SCENE = Scene([
-	       #Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
+	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
 	       Difference([
 	       Intersection([ # Cube
 		  #Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), CHECK_FLOOR),
@@ -50,11 +51,33 @@ SCENE.lights = [
 	  PointLight(SCENE, Point3(.5, 1.1, 1.2), Colour(0.9, 0.9, 0.9)),
 	  ]
 SCENE.background = Colour(0, 0, 0)
-SCENE.ambient = Colour(0.0, 0.0, 0.0) 
+SCENE.ambient = Colour(0.1, 0.1, 0.1) 
 
 class rayCaster(object):
     def __init__(self):
+	self.root = Tk()
+        self.root.title("Ray Tracer")
+        canvas = Canvas(self.root, width=WIN_SIZE , height=WIN_SIZE )
+        self.image = PhotoImage(master=self.root, width=WIN_SIZE, height=WIN_SIZE)
+        imageCentre = (WIN_SIZE / 2 + 2, WIN_SIZE / 2 + 2)
+        canvas.create_image(imageCentre, image = self.image)
+        canvas.pack()
+
+        # Enqueue a callback to the ray tracer to start it going
+        self.root.after(0, lambda : self.trace() )
 	return
+
+    def putImageRow(self, row, colours):
+        """Output a list of colours to the specified row of the image.
+
+        Tk uses horrible hexadecimal formatted colours, packed into
+        a string separated by spaces and all enclosed in braces."
+        """
+        
+        hexColours = ["#%02x%02x%02x" % colour for colour in colours]
+        rowColourString = "{" + " ".join(hexColours) + "}"
+        self.image.put(rowColourString, to=(0, row))
+        self.root.update()
 
     def rayColour(self, ray, depth=0):
 	
@@ -77,10 +100,11 @@ class rayCaster(object):
                 count += 1
 
 		pixelBox = (col * SPACING, (WIN_SIZE - row) * SPACING, (col+1) * SPACING, (WIN_SIZE - row+1) * SPACING)
-
-                ROW.append(aa.getPixel(pixelBox))
+		pixel = aa.getPixel(pixelBox)
+                ROW.append(pixel)
 	    percentage = (count / max * 100)
 	    hits.append(ROW)
+	    #self.putImageRow(row, [p.colour().intColour() for p in ROW])
 	    if percentage - lastPercentage > .9:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()
@@ -89,12 +113,16 @@ class rayCaster(object):
 
 	print "\tTracing Reflection Rays...   0%",
 	count = 0
+	row = 0
 	lastPercentage = 0
 	for cols in hits:
+	    row += 1
 	    for pixel in cols:
 	        count += 1
-		if pixel: pixel.calcReflections(SCENE)
+		if pixel:
+		    pixel.calcReflections(SCENE)
 	    percentage = (count / max * 100)
+	    #self.putImageRow(row, [p.colour().intColour() for p in cols])
 	    if percentage - lastPercentage > 3.3:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()
@@ -103,12 +131,16 @@ class rayCaster(object):
 
 	print "\tTracing Shadow Rays...   0%",
 	count = 0
+	row = 0
 	lastPercentage = 0
 	for cols in hits:
+	    row += 1
 	    for pixel in cols:
 	        count += 1
-	        if pixel: pixel.calcLights(SCENE)
+	        if pixel: 
+		    pixel.calcLights(SCENE)
 	    percentage = (count / max * 100)
+	    #self.putImageRow(row, [p.colour().intColour() for p in cols])
 	    if percentage - lastPercentage > 3.3:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()
@@ -136,4 +168,4 @@ class rayCaster(object):
 
 caster = rayCaster()
 #cProfile.run("caster.trace()")
-caster.trace()
+caster.root.mainloop()

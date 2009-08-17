@@ -4,6 +4,8 @@ value (distance along the ray) at the first hit, plus
 the object hit, in a pair. Written for COSC363.
 @author Richard Lobb, June 22, 2009."""
 
+from hit import BlankHit
+
 class Scene(object):
 
     def __init__(self, objs = []):
@@ -19,7 +21,7 @@ class Scene(object):
         returning the pair (obj, t) of the first hit or None if
         there are no hits"""
 
-        minHit = None
+        minHit = BlankHit(self.background)
 	for o in self.objs:
 	    hit = o.intersect(ray)
 	    if hit and (hit.entry > 0):

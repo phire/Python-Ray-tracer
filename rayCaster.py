@@ -82,18 +82,19 @@ class rayCaster(object):
     def rayColour(self, ray, depth=0):
 	
         hit = SCENE.intersect(ray)
-	return hit
+	hit.calcReflections(SCENE)
+	hit.calcLights(SCENE)
+	return hit.colour()
 	    
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         img = Image.new("RGB", (WIN_SIZE, WIN_SIZE))
 	aa = NoAA(EYEPOINT, self.rayColour)
-	print "\tTracing Primary Rays...   0%",
+	print "\tTracing Rays...   0%",
 	sys.stdout.flush()
 	count = 0
 	max = float(WIN_SIZE**2)
 	lastPercentage = 0
-	hits = []
         for row in range(WIN_SIZE):
 	    ROW = []
             for col in range(WIN_SIZE):
@@ -101,64 +102,11 @@ class rayCaster(object):
 
 		pixelBox = (col * SPACING, (WIN_SIZE - row) * SPACING, (col+1) * SPACING, (WIN_SIZE - row+1) * SPACING)
 		pixel = aa.getPixel(pixelBox)
-                ROW.append(pixel)
+                img.putpixel((col, row), pixel.intColour())
+		ROW.append(pixel)
 	    percentage = (count / max * 100)
-	    hits.append(ROW)
-	    #self.putImageRow(row, [p.colour().intColour() for p in ROW])
+	    self.putImageRow(row, [p.intColour() for p in ROW])
 	    if percentage - lastPercentage > .9:
-	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
-		sys.stdout.flush()
-		lastPercentage = percentage
-	print "\b\b\b\b\b\b Done"
-
-	print "\tTracing Reflection Rays...   0%",
-	count = 0
-	row = 0
-	lastPercentage = 0
-	for cols in hits:
-	    row += 1
-	    for pixel in cols:
-	        count += 1
-		if pixel:
-		    pixel.calcReflections(SCENE)
-	    percentage = (count / max * 100)
-	    #self.putImageRow(row, [p.colour().intColour() for p in cols])
-	    if percentage - lastPercentage > 3.3:
-	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
-		sys.stdout.flush()
-		lastPercentage = percentage
-	print "\b\b\b\b\b\b Done"
-
-	print "\tTracing Shadow Rays...   0%",
-	count = 0
-	row = 0
-	lastPercentage = 0
-	for cols in hits:
-	    row += 1
-	    for pixel in cols:
-	        count += 1
-	        if pixel: 
-		    pixel.calcLights(SCENE)
-	    percentage = (count / max * 100)
-	    #self.putImageRow(row, [p.colour().intColour() for p in cols])
-	    if percentage - lastPercentage > 3.3:
-	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
-		sys.stdout.flush()
-		lastPercentage = percentage
-	print "\b\b\b\b\b\b Done"
-
-	print "\tRendering Image...   0%",
-	count = 0
-	lastPercentage = 0
-	for row in range(WIN_SIZE):
-	    for col in range(WIN_SIZE):
-	        count += 1
-		pixel = hits[row][col]
-		if pixel:
-		    img.putpixel((col,row), hits[row][col].colour().intColour())
-		else: img.putpixel((col,row), SCENE.background.intColour())
-	    percentage = (count / max * 100)
-	    if percentage - lastPercentage > 9.9:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()
 		lastPercentage = percentage

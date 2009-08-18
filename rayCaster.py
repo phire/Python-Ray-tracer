@@ -14,6 +14,7 @@ from texture import *
 from CSG import *
 import sys
 from Tkinter import Tk, Canvas, PhotoImage
+from camera import Camera
 
 
 # Define various scene constants
@@ -26,7 +27,7 @@ SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, .3)
 MATT_GREEN = Material(Colour(0.1,0.85, 0.1))
 CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
 
-EYEPOINT = Point3(0.5, 0.4, 2.5)
+EYEPOINT = Point3(0.1, 0.1, 0.8)
 
 SCENE = Scene([
 	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
@@ -92,6 +93,10 @@ class rayCaster(object):
 	aa = NoAA(EYEPOINT, self.rayColour)
 	print "\tTracing Rays...   0%",
 	sys.stdout.flush()
+
+	camera = Camera(EYEPOINT,WIN_SIZE)
+	camera.lookAt(Point3(0.5,0.0,0.5))
+
 	count = 0
 	max = float(WIN_SIZE**2)
 	lastPercentage = 0
@@ -100,8 +105,9 @@ class rayCaster(object):
             for col in range(WIN_SIZE):
                 count += 1
 
-		pixelBox = (col * SPACING, (WIN_SIZE - row) * SPACING, (col+1) * SPACING, (WIN_SIZE - row+1) * SPACING)
-		pixel = aa.getPixel(pixelBox)
+		#pixelBox = (col * SPACING, (WIN_SIZE - row) * SPACING, (col+1) * SPACING, (WIN_SIZE - row+1) * SPACING)
+		#pixel = aa.getPixel(pixelBox)
+		pixel = self.rayColour(camera.getRay(col, row))
                 img.putpixel((col, row), pixel.intColour())
 		ROW.append(pixel)
 	    percentage = (count / max * 100)

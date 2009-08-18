@@ -27,7 +27,7 @@ SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, .3)
 MATT_GREEN = Material(Colour(0.1,0.85, 0.1))
 CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
 
-EYEPOINT = Point3(0.1, 0.1, 0.8)
+EYEPOINT = Point3(0.0, 0.1, 0.9)
 
 SCENE = Scene([
 	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),

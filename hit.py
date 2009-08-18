@@ -22,6 +22,7 @@ class Hit(object):
     	self.entry = entry
 	self.exit = exit
 	self.normal = normal
+	self.normal2 = None
 	self.mat = material
 	self.texCords = TexCords
 	self.ray = ray
@@ -30,6 +31,8 @@ class Hit(object):
 	self.lights = [None]
 	self.ambient = Colour(0.8, 0.8, 0.8)
 
+    def __repr__(self):
+    	return "Hit " + str(self.obj) + " Along " + str(self.ray) + " entry: " + str(self.entry) + " exit: " + str(self.exit)
 
     def __lt__(self, other):
     	return self.entry < other.entry
@@ -48,8 +51,9 @@ class Hit(object):
 	    ret.normal = other.normal
 	    ret.texCords = other.texCords
 	if other.exit:
-	    if self.exit:
-		ret.exit = min(self.exit, other.exit)
+	    if self.exit and self.exit > other.exit:
+		ret.exit = other.exit
+		ret.normal2 = other.normal2
 	    else:
 		ret.exit = other.exit
 	return ret
@@ -79,6 +83,8 @@ class Hit(object):
 	    if other.exit > self.entry and other.entry < self.entry:
 		ret.entry = other.exit
 		ret.mat = other.mat
+		if other.normal2 is None:
+		    print other
 		ret.normal = -other.normal2
 		ret.texCords = other.texCords
 	return ret

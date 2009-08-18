@@ -43,7 +43,8 @@ class Sphere(object):
 		hit = Hit(self, ray, t1, t0, None, self.material)
 	    if hit.entry > 0:
 		hit.normal = self.normal(ray.pos(hit.entry))
-		hit.normal2 = self.normal(ray.pos(hit.exit))
+	    if hit.exit > 0:
+	    	hit.normal2 = self.normal(ray.pos(hit.exit))
         return hit
     
 

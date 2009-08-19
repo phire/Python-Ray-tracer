@@ -42,7 +42,7 @@ scene.background = Colour(0, 0, 0)
 scene.ambient = Colour(0.4, 0.4, 0.4) 
 
 
-camera = Camera(Point3(0.1, 0.2, -.6),WIN_SIZE)
+camera = Camera(scene, Point3(0.1, 0.2, -.6),WIN_SIZE)
 #camera.lookAt(Point3(0.5,0.2,0.3))
 camera.lookAt(Point3(0.1,0.1, 0.9))
 

@@ -49,8 +49,8 @@ class rayCaster(object):
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         camera = definition.camera
+        camera.img = Image.new("RGB", (camera.size, camera.size))
 
-        img = Image.new("RGB", (camera.size, camera.size))
         print "\tTracing Rays...   0%",
         sys.stdout.flush()
 
@@ -62,18 +62,17 @@ class rayCaster(object):
             for col in range(WIN_SIZE):
                 count += 1
 
-                pixel = self.rayColour(camera.getRay(col, row), definition.scene)
-                img.putpixel((col, row), pixel.intColour())
+                pixel = camera.pixelColour(col, row)
                 ROW.append(pixel)
             percentage = (count / max * 100)
-            self.putImageRow(row, [p.intColour() for p in ROW])
+            self.putImageRow(row, ROW)
             if percentage - lastPercentage > .9:
                 print "\b\b\b\b\b\b%4.0f%%" % percentage,
                 sys.stdout.flush()
                 lastPercentage = percentage
         print "\b\b\b\b\b\b Done"
 
-        img.save("out.png")  # Display image in default image-viewer application
+        camera.img.save("out.png")  # Display image in default image-viewer application
 
 caster = rayCaster()
 #cProfile.run("caster.root.mainloop()")

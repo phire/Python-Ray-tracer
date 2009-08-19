@@ -51,9 +51,10 @@ class Hit(object):
 	    ret.normal = other.normal
 	    ret.texCords = other.texCords
 	if other.exit:
-	    if self.exit and self.exit > other.exit:
-		ret.exit = other.exit
-		ret.normal2 = other.normal2
+	    if self.exit:
+		if self.exit > other.exit:
+		    ret.exit = other.exit
+		    ret.normal2 = other.normal2
 	    else:
 		ret.exit = other.exit
 	return ret

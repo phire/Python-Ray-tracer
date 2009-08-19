@@ -9,7 +9,7 @@ from camera import Camera
 sys.path.insert(0,"scenes/")
 
 #import balls as definition
-definition = __import__("balls")
+definition = __import__("balls2")
 
 WIN_SIZE = definition.camera.size
 

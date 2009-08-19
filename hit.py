@@ -16,6 +16,9 @@ class BlankHit(object):
     def calcReflections(self, scene, depth=0):
 	return
 
+    def length(self):
+	return 0.0
+
 class Hit(object):
     def __init__(self, obj, ray, entry, exit, normal=None, material=None, TexCords=None):
         self.obj = obj
@@ -127,4 +130,10 @@ class Hit(object):
 	elif self.bgcolour:
 	    colour += self.mat.reflectivity * self.bgcolour
 	return colour
+
+    def length(self):
+	length = self.entry
+	if self.reflection is not None:
+	    length += self.reflection.length()
+	return length
 

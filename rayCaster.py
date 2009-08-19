@@ -71,6 +71,7 @@ class rayCaster(object):
                 sys.stdout.flush()
                 lastPercentage = percentage
         print "\b\b\b\b\b\b Done"
+	print camera.maxLength
 
         camera.img.save("out.png")  # Display image in default image-viewer application
 

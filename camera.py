@@ -1,6 +1,7 @@
 import math
 from geom3 import *
 import Image
+from colour import Colour
 
 
 class Camera(object):
@@ -11,6 +12,7 @@ class Camera(object):
 	self.viewUp = Vector3(0,1,0)
 	self.at = Point3(.5,.5,.5)
 	self.scene = scene
+	self.maxLength = 0
 
 	self.Update()
 
@@ -54,7 +56,10 @@ class Camera(object):
 	# full scene anti alising goes here
 	hit = self.processRay(ray)
 	
-	colour = hit.colour().intColour()
+	depth = math.log((hit.length() + 0.1), 10)
+	colour = Colour(depth, depth, depth).intColour()
 	self.img.putpixel((x, y), colour)
+	if hit.length() > self.maxLength:
+	    self.maxLength = hit.length()
         return colour
 

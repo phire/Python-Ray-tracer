@@ -26,15 +26,17 @@ scene = Scene([
 		 Sphere(Point3(0.1,0.175,0.8), 0.165, SHINY_BLUE)]),
 	       Sphere(Point3(0.75,0.17,.8), 0.17, SHINY_RED),
                Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR),
-	       Difference([
+	       #Difference([
 	       Intersection([ # Cube
 		  Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), MATT_GREEN),
+		  Difference([
 		  Plane(Point3(0.1,0.08,0.8), Vector3(0, 1,0), MATT_GREEN),
+		  Sphere(Point3(0.4, .1, 1.3), 0.1, MATT_GREEN)])
 		  Plane(Point3(0.3,0.1,0.5), Vector3(-1,0,0), MATT_GREEN),
 		  Plane(Point3(0.5,0.1,0.5), Vector3( 1,0,0), MATT_GREEN),
 		  Plane(Point3(0.5,0.1,1.3), Vector3(0,0, 1), MATT_GREEN),
 		  Plane(Point3(0.5,0.1,  1), Vector3(0,0,-1), MATT_GREEN)]),
-	       Sphere(Point3(0.4, .1, 1.3), 0.1, MATT_GREEN)]),
+	       #Sphere(Point3(0.4, .1, 1.3), 0.1, MATT_GREEN)]),
 	       ])
 
 scene.lights = [

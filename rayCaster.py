@@ -3,6 +3,7 @@ import cProfile
 from antiAlaising import *
 import Image
 import sys
+import time
 from Tkinter import Tk, Canvas, PhotoImage
 from camera import Camera
 
@@ -39,13 +40,6 @@ class rayCaster(object):
         self.image.put(rowColourString, to=(0, row))
         self.root.update()
 
-    def rayColour(self, ray, scene):
-        
-        hit = scene.intersect(ray)
-        hit.calcReflections(scene)
-        hit.calcLights(scene)
-        return hit.colour()
-            
     # Main body. Set up an image then compute colour at each pixel
     def trace(self):
         camera = definition.camera
@@ -55,6 +49,7 @@ class rayCaster(object):
         sys.stdout.flush()
 
         count = 0
+	t0 = time.clock()
         max = float(WIN_SIZE**2)
         lastPercentage = 0
         for row in range(WIN_SIZE):
@@ -63,6 +58,28 @@ class rayCaster(object):
                 count += 1
 
                 pixel = camera.pixelColour(col, row)
+		camera.img.putpixel((col, row), pixel.intColour())
+                ROW.append(pixel.intColour())
+            percentage = (count / max * 100)
+            self.putImageRow(row, ROW)
+            if percentage - lastPercentage > .9:
+                print "\b\b\b\b\b\b%4.0f%%" % percentage,
+                sys.stdout.flush()
+                lastPercentage = percentage
+        print "\b\b\b\b\b\b Done (%f sec)" % (time.clock() - t0)
+
+	print "\tAnti-alasing...   0%",
+        sys.stdout.flush()
+	t0 = time.clock()
+        count = 0
+        lastPercentage = 0
+        for row in range(WIN_SIZE):
+            ROW = []
+            for col in range(WIN_SIZE):
+                count += 1
+
+                pixel = camera.aa(col, row)
+		camera.img.putpixel((col, row), pixel)
                 ROW.append(pixel)
             percentage = (count / max * 100)
             self.putImageRow(row, ROW)
@@ -70,8 +87,9 @@ class rayCaster(object):
                 print "\b\b\b\b\b\b%4.0f%%" % percentage,
                 sys.stdout.flush()
                 lastPercentage = percentage
-        print "\b\b\b\b\b\b Done"
-	print camera.maxLength
+        print "\b\b\b\b\b\b (%f sec)" % (time.clock() - t0)
+
+	print camera.pixels
 
         camera.img.save("out.png")  # Display image in default image-viewer application
 

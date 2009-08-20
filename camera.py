@@ -13,6 +13,7 @@ class Camera(object):
 	self.at = Point3(.5,.5,.5)
 	self.scene = scene
 	self.maxLength = 0
+	self.pixels = [0,0,0,0,0,0,0,0,0]
 
 	self.Update()
 
@@ -51,15 +52,50 @@ class Camera(object):
         hit.calcLights(self.scene)
         return hit
 
-    def pixelColour(self, x, y):
-        ray = self.getRay(x, y);
-	# full scene anti alising goes here
-	hit = self.processRay(ray)
+    def pixelColour(self, x, y, samples=1):
+	pitch = .5 / samples
+	colour = Colour(0,0,0)
+	count = 0
+	for subX in range(samples):
+	  for subY in range(samples):
+	    count += 1
+	    ray = self.getRay(x - .5 + (subX+1) * pitch + subX*pitch, 
+			      y - .5 + (subY+1) * pitch + subY*pitch)
+	    hit = self.processRay(ray)
+	    colour = colour + hit.colour()
+	    #depth = math.log((hit.length() + 0.1), 10)
+	    #colour = colour + Colour(depth, depth, depth)
+
+	self.pixels[samples] += 1 
+        return colour / count
+
+    def aa(self, x, y):
+	"""Detect if the pixel x,y is at an edge, then anti-alais it"""
+
+	#This code is ugly, I can't work out a more sane way to do it
+	M = self.size
+	(p1, p2, p3, p4, p6, p7, p8, p9) = [(0,0,0)] * 8
+	if x > 1 and y > 1: p1 = self.img.getpixel((x-1, y-1))
+	if y > 2: p2 = self.img.getpixel((x, y-1))
+	if x < M - 1 and y > 1: p3 = self.img.getpixel((x+1, y-1))
+	if x > 1: p4 = self.img.getpixel((x-1, y))
+	p5 = self.img.getpixel((x, y))
+	if x < M - 1: p6 = self.img.getpixel((x+1, y))
+	if x > 1 and y > M: p7 = self.img.getpixel((x-1, y+1))
+	if y > M: p8 = self.img.getpixel((x, y+1))
+	if x > M and y > M: p9 = self.img.getpixel((x+1, y+1))
 	
-	depth = math.log((hit.length() + 0.1), 10)
-	colour = Colour(depth, depth, depth).intColour()
-	self.img.putpixel((x, y), colour)
-	if hit.length() > self.maxLength:
-	    self.maxLength = hit.length()
-        return colour
+	r = abs((p1[0] + 2 * p2[0] + p3[0]) - (p7[0] + 2 * p8[0] + p9[0])) + 	    abs((p2[0] + 2 * p6[0] + p9[0]) - (p1[0] + 2 * p4[0] + p7[0]))
+	g = abs((p1[1] + 2 * p2[1] + p3[1]) - (p7[1] + 2 * p8[1] + p9[1])) + 	    abs((p2[1] + 2 * p6[1] + p9[1]) - (p1[1] + 2 * p4[1] + p7[1]))
+	b = abs((p1[2] + 2 * p2[2] + p3[2]) - (p7[2] + 2 * p8[2] + p9[2])) + 	    abs( (p2[2] + 2 * p6[2] + p9[2]) - (p1[2] + 2 * p4[2] + p7[2]) )
+
+	sum = r + g + b
+
+	if sum > 300: # We do 2 levels of AA
+	    colour =  self.pixelColour(x, y, 4) # 16 samples per pixel
+	    return colour.intColour()
+	elif sum > 150:
+	    colour =  self.pixelColour(x, y, 2) # 4 samples per pixel
+	    return colour.intColour()
+	return p5
 

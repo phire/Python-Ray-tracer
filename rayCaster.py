@@ -10,7 +10,7 @@ from camera import Camera
 sys.path.insert(0,"scenes/")
 
 #import balls as definition
-definition = __import__("balls2")
+definition = __import__(sys.argv[1])
 
 WIN_SIZE = definition.camera.size
 
@@ -75,6 +75,7 @@ class rayCaster(object):
         lastPercentage = 0
         for row in range(WIN_SIZE):
             ROW = []
+	    self.putImageRow(row, [(255,255,255)] * WIN_SIZE)
             for col in range(WIN_SIZE):
                 count += 1
 
@@ -91,7 +92,7 @@ class rayCaster(object):
 
 	print camera.pixels
 
-        camera.img.save("out.png")  # Display image in default image-viewer application
+        camera.img.save(sys.argv[1] + ".png")  # Display image in default image-viewer application
 
 caster = rayCaster()
 #cProfile.run("caster.root.mainloop()")

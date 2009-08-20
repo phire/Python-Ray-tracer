@@ -9,7 +9,7 @@ from texture import *
 from CSG import *
 from camera import Camera
 
-WIN_SIZE = 100                              # Screen window size (square)
+WIN_SIZE = 300                              # Screen window size (square)
 
 SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, .2)
 SHINY_BLUE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, .3)

@@ -73,17 +73,19 @@ class Camera(object):
 	"""Detect if the pixel x,y is at an edge, then anti-alais it"""
 
 	#This code is ugly, I can't work out a more sane way to do it
-	M = self.size
+	M = self.size -1
 	(p1, p2, p3, p4, p6, p7, p8, p9) = [(0,0,0)] * 8
 	if x > 1 and y > 1: p1 = self.img.getpixel((x-1, y-1))
-	if y > 2: p2 = self.img.getpixel((x, y-1))
-	if x < M - 1 and y > 1: p3 = self.img.getpixel((x+1, y-1))
+	if y > 1: p2 = self.img.getpixel((x, y-1))
+	if x < M and y > 1: p3 = self.img.getpixel((x+1, y-1))
 	if x > 1: p4 = self.img.getpixel((x-1, y))
 	p5 = self.img.getpixel((x, y))
-	if x < M - 1: p6 = self.img.getpixel((x+1, y))
-	if x > 1 and y > M: p7 = self.img.getpixel((x-1, y+1))
-	if y > M: p8 = self.img.getpixel((x, y+1))
-	if x > M and y > M: p9 = self.img.getpixel((x+1, y+1))
+	if x < M: p6 = self.img.getpixel((x+1, y))
+	if x > 1 and y < M: p7 = self.img.getpixel((x-1, y+1))
+	if y < M: p8 = self.img.getpixel((x, y+1))
+	if x < M and y < M: p9 = self.img.getpixel((x+1, y+1))
+
+	#print p1, p2, p3, p4, p5, p6, p7, p8, p9
 	
 	r = abs((p1[0] + 2 * p2[0] + p3[0]) - (p7[0] + 2 * p8[0] + p9[0])) + 	    abs((p2[0] + 2 * p6[0] + p9[0]) - (p1[0] + 2 * p4[0] + p7[0]))
 	g = abs((p1[1] + 2 * p2[1] + p3[1]) - (p7[1] + 2 * p8[1] + p9[1])) + 	    abs((p2[1] + 2 * p6[1] + p9[1]) - (p1[1] + 2 * p4[1] + p7[1]))
@@ -91,11 +93,14 @@ class Camera(object):
 
 	sum = r + g + b
 
-	if sum > 300: # We do 2 levels of AA
-	    colour =  self.pixelColour(x, y, 4) # 16 samples per pixel
+	if sum > 1200: # We do 2 levels of AA
+	    colour = self.pixelColour(x, y, 4) # 16 samples per pixel
 	    return colour.intColour()
-	elif sum > 150:
-	    colour =  self.pixelColour(x, y, 2) # 4 samples per pixel
+	elif sum > 900:
+	    colour = self.pixelColour(x, y, 3) # 9 samples per pixel
+	    return colour.intColour()
+	elif sum > 200:
+	    colour = self.pixelColour(x, y, 2) # 4 samples per pixel
 	    return colour.intColour()
 	return p5
 

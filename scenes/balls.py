@@ -17,7 +17,7 @@ MATT_GREEN = Material(Colour(0.1,0.85, 0.1))
 CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(0,0,0), Colour(0.5,0.5,0.5)))
 
 scene = Scene([
-	       #Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
+	       Sphere(Point3(0.35,0.6,0.5), 0.25, SHINY_BLUE),
 	       #Difference([
 	       Intersection([ # Cube
 		  #Plane(Point3(0.2,0.0,0.5), Vector3(0,-1,0), CHECK_FLOOR),
@@ -42,8 +42,8 @@ scene.background = Colour(0, 0, 0)
 scene.ambient = Colour(0.4, 0.4, 0.4) 
 
 
-camera = Camera(scene, Point3(0.1, 0.2, -.6),WIN_SIZE)
-#camera.lookAt(Point3(0.5,0.2,0.3))
-camera.lookAt(Point3(0.1,0.1, 0.9))
+camera = Camera(scene, Point3(0.5, 0.2, 1.6),WIN_SIZE)
+camera.lookAt(Point3(0.5,0.2,0.3))
+#camera.lookAt(Point3(0.1,0.1, 0.9))
 
 

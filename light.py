@@ -14,7 +14,7 @@ class Light(object):
     def atPoint(self, point):
 	shadowRay = Ray3(point + self.offset, self.dir)
 	shadowTest = self.scene.intersect(shadowRay)
-	if shadowTest is None:
+	if shadowTest.entry is ():
 	    return LightHit(self.colour, self.dir)
 	return None
 

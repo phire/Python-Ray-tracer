@@ -45,6 +45,7 @@ class rayCaster(object):
         camera = definition.camera
         camera.img = Image.new("RGB", (camera.size, camera.size))
 
+	print "ScottTracer"
         print "\tTracing Rays...   0%",
         sys.stdout.flush()
 

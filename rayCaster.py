@@ -18,7 +18,7 @@ from Tkinter import Tk, Canvas, PhotoImage
 
 # Define various scene constants
 
-WIN_SIZE = 400                              # Screen window size (square)
+WIN_SIZE = 800                              # Screen window size (square)
 SPACING = 1.0 / WIN_SIZE                    # Pixel spacing on viewplane
 
 SHINY_RED = Material(Colour(0.7, 0.1, 0.2), Colour(0.4,0.4,0.4), 100, .2)
@@ -104,7 +104,7 @@ class rayCaster(object):
                 ROW.append(pixel)
 	    percentage = (count / max * 100)
 	    hits.append(ROW)
-	    #self.putImageRow(row, [p.colour().intColour() for p in ROW])
+	    self.putImageRow(row, [p.colour().intColour() for p in ROW])
 	    if percentage - lastPercentage > .9:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()
@@ -122,7 +122,7 @@ class rayCaster(object):
 		if pixel:
 		    pixel.calcReflections(SCENE)
 	    percentage = (count / max * 100)
-	    #self.putImageRow(row, [p.colour().intColour() for p in cols])
+	    self.putImageRow(row, [p.colour().intColour() for p in cols])
 	    if percentage - lastPercentage > 3.3:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()
@@ -140,7 +140,7 @@ class rayCaster(object):
 	        if pixel: 
 		    pixel.calcLights(SCENE)
 	    percentage = (count / max * 100)
-	    #self.putImageRow(row, [p.colour().intColour() for p in cols])
+	    self.putImageRow(row, [p.colour().intColour() for p in cols])
 	    if percentage - lastPercentage > 3.3:
 	        print "\b\b\b\b\b\b%4.0f%%" % percentage,
 		sys.stdout.flush()

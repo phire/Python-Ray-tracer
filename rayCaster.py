@@ -9,8 +9,8 @@ from camera import Camera
 
 sys.path.insert(0,"scenes/")
 
-#import balls as definition
 definition = __import__(sys.argv[1])
+#definition = __import__("basic")
 
 WIN_SIZE = definition.camera.size
 
@@ -45,12 +45,12 @@ class rayCaster(object):
         camera = definition.camera
         camera.img = Image.new("RGB", (camera.size, camera.size))
 
-	print "ScottTracer"
+        print "ScottTracer"
         print "\tTracing Rays...   0%",
         sys.stdout.flush()
 
         count = 0
-	t0 = time.clock()
+        t0 = time.clock()
         max = float(WIN_SIZE**2)
         lastPercentage = 0
         for row in range(WIN_SIZE):
@@ -59,7 +59,7 @@ class rayCaster(object):
                 count += 1
 
                 pixel = camera.pixelColour(col, row)
-		camera.img.putpixel((col, row), pixel.intColour())
+                camera.img.putpixel((col, row), pixel.intColour())
                 ROW.append(pixel.intColour())
             percentage = (count / max * 100)
             self.putImageRow(row, ROW)
@@ -69,19 +69,19 @@ class rayCaster(object):
                 lastPercentage = percentage
         print "\b\b\b\b\b\b Done (%f sec)" % (time.clock() - t0)
 
-	print "\tAnti-alasing...   0%",
+        print "\tAnti-alasing...   0%",
         sys.stdout.flush()
-	t0 = time.clock()
+        t0 = time.clock()
         count = 0
         lastPercentage = 0
         for row in range(WIN_SIZE):
             ROW = []
-	    self.putImageRow(row, [(255,255,255)] * WIN_SIZE)
+            self.putImageRow(row, [(255,255,255)] * WIN_SIZE)
             for col in range(WIN_SIZE):
                 count += 1
 
                 pixel = camera.aa(col, row)
-		camera.img.putpixel((col, row), pixel)
+                camera.img.putpixel((col, row), pixel)
                 ROW.append(pixel)
             percentage = (count / max * 100)
             self.putImageRow(row, ROW)
@@ -91,7 +91,7 @@ class rayCaster(object):
                 lastPercentage = percentage
         print "\b\b\b\b\b\b (%f sec)" % (time.clock() - t0)
 
-	print camera.pixels
+        print camera.pixels
 
         camera.img.save(sys.argv[1] + ".png")  # Display image in default image-viewer application
 

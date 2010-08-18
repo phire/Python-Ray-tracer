@@ -93,14 +93,17 @@ class Camera(object):
 
 	sum = r + g + b
 
-	if sum > 1200: # We do 2 levels of AA
+	if sum > 1200: # We do 3 levels of AA
 	    colour = self.pixelColour(x, y, 4) # 16 samples per pixel
 	    return colour.intColour()
+	    #return Colour(1,1,0).intColour()
 	elif sum > 900:
 	    colour = self.pixelColour(x, y, 3) # 9 samples per pixel
 	    return colour.intColour()
+	    #return Colour(0,1,1).intColour()
 	elif sum > 200:
 	    colour = self.pixelColour(x, y, 2) # 4 samples per pixel
 	    return colour.intColour()
+	    #return Colour(1,1,1).intColour()
 	return p5
 

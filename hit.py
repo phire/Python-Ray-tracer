@@ -2,9 +2,10 @@ from geom3 import Ray3, dot, unit
 from colour import Colour
 
 class BlankHit(object):
+    """Null hit"""
     def __init__(self, colour):
 	self.mycolour = colour
-	self.entry = ()
+	self.entry = () # () is positive infinity (oppisit of None)
 	self.exit = ()
 
     def colour(self):
@@ -20,6 +21,7 @@ class BlankHit(object):
 	return 0.0
 
 class Hit(object):
+    """Hit objects are return by objects when rays are intersected"""
     def __init__(self, obj, ray, entry, exit, normal=None, material=None, TexCords=None):
         self.obj = obj
     	self.entry = entry
@@ -29,10 +31,14 @@ class Hit(object):
 	self.mat = material
 	self.texCords = TexCords
 	self.ray = ray
+	
+	#Undefined variables
 	self.reflection = None
 	self.bgcolour = None
 	self.lights = [None]
-	self.ambient = Colour(0.8, 0.8, 0.8)
+	
+        # temp ambiant for when colour is called before calcLights
+        self.ambient = Colour(0.8, 0.8, 0.8)
 
     def __repr__(self):
     	return "Hit " + str(self.obj) + " Along " + str(self.ray) + " entry: " + str(self.entry) + " exit: " + str(self.exit)

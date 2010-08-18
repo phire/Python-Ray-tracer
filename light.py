@@ -49,8 +49,7 @@ class SpotLight(object):
 
     def atPoint(self, point):
 	dir = unit(self.point - point)
-	angle = abs(dot(dir, self.vector))
-	#print angle
+	angle = dot(dir, self.vector)
 	if angle < self.angle:
 	    return None
 	shadowRay = Ray3(point + self.offset * dir, dir)

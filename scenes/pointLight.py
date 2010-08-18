@@ -14,7 +14,7 @@ WIN_SIZE = 300                              # Screen window size (square)
 SHINY_RED = Material(Colour(0.7, 0.7, 0.7), Colour(0.4,0.4,0.4), 100, .2)
 SHINY_SPHERE = Material(Colour(0.2, 0.3, 0.7), Colour(0.8,0.8,0.8), 200, .3)
 MATT_CUBE = Material(Colour(0.7,0.7, 0.7), Colour(0.9,0.9,0.9), 300, .5)
-CHECK_FLOOR = Material(None, None, None, None, Texture_Check(6, Colour(.1,.1,.1), Colour(0.7,0.7,0.7)))
+MATT_PLANE = Material(Colour(0.6,0.6,0.6))
 
 scene = Scene([
     Intersection([ # Cube
@@ -24,14 +24,19 @@ scene = Scene([
 	Plane(Point3(0.8,0.0,0.5), Vector3( 1,.3,0), MATT_CUBE),
 	Plane(Point3(0.5,0.0,0.8), Vector3(0,.3, 1), MATT_CUBE),
 	Plane(Point3(0.5,0.0,0.2), Vector3(0,.3,-1), MATT_CUBE)]),
-    Sphere(Point3(0.5,0.3,0.5), 0.2, SHINY_SPHERE),
-    Plane(Point3(0,0,0), Vector3(0,1,0), CHECK_FLOOR),
+    Intersection([ # Cube
+	Plane(Point3(0.5,0.0,0.5), Vector3(0,-1,0), MATT_CUBE),
+	Plane(Point3(0.5,0.1,0.5), Vector3(0, 1,0), MATT_CUBE),
+	Plane(Point3(0.2,0.0,0.5), Vector3(-1,.3,0), MATT_CUBE),
+	Plane(Point3(0.8,0.0,0.5), Vector3( 1,.3,0), MATT_CUBE),
+	Plane(Point3(0.5,0.0,0.8), Vector3(0,.3, 1), MATT_CUBE),
+	Plane(Point3(0.5,0.0,0.2), Vector3(0,.3,-1), MATT_CUBE)]),
+    Plane(Point3(0.5,0.0,0.0), Vector3(0,1,0) MATT_PLANE),
+    Plane(Point3(0.5,0.0,-1), Vector3(0,0,1) MATT_PLANE),
 ])
-
+ 
 scene.lights = [
-    SpotLight(scene, Point3( 1, 1,  1), Point3(0.5,0.5,0.5), 20, Colour(.8,0,0)),
-    SpotLight(scene, Point3( 1.2, 1, -1), Point3(0.5,0.5,0.5), 25, Colour(0,1,0)),
-    SpotLight(scene, Point3(-1, 1,  1.2), Point3(0.5,0.5,0.5), 25, Colour(0,0,1)),
+        SpotLight(scene, Point3(-1, 1,  1.2), Point3(0.5,0.5,0.5), 25, Colour(0,0,1)),
 ]
 scene.background = Colour(0, 0, 0)
 scene.ambient = Colour(0.3, 0.3, 0.3) 
